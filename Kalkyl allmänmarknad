@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allmänmarknad kalkyl - Studieförbundet Vuxenskolan Västmanland</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e293b',
+                        secondary: '#f1f5f9',
+                        accent: '#059669'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-emerald-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-600 to-green-600 rounded-full mb-4">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold text-primary mb-2">Allmänmarknad kalkyl</h1>
+            <p class="text-xl text-gray-600 font-medium">Studieförbundet Vuxenskolan Västmanland</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Calculator Form -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                <h2 class="text-2xl font-semibold text-primary mb-6">Kursparametrar</h2>
+                
+                <!-- Timlön/Arvode -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Timlön/Arvode (kr)</label>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="adjustHourlyWage(-5)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">−</span>
+                        </button>
+                        <div class="flex-1 text-center">
+                            <span id="hourly-wage-display" class="text-2xl font-bold text-primary">150</span>
+                            <span class="text-gray-500 ml-1">kr/tim</span>
+                        </div>
+                        <button onclick="adjustHourlyWage(5)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">+</span>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <input type="range" id="hourly-wage-slider" min="150" max="1000" step="5" value="150" 
+                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                               oninput="updateHourlyWage(this.value)">
+                    </div>
+                </div>
+
+                <!-- Antal timmar per sammankomst -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Antal timmar per sammankomst</label>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="adjustHours(-1)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">−</span>
+                        </button>
+                        <div class="flex-1 text-center">
+                            <span id="hours-display" class="text-2xl font-bold text-primary">1</span>
+                            <span class="text-gray-500 ml-1">timmar</span>
+                        </div>
+                        <button onclick="adjustHours(1)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">+</span>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <input type="range" id="hours-slider" min="1" max="10" step="1" value="1" 
+                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                               oninput="updateHours(this.value)">
+                    </div>
+                </div>
+
+                <!-- Antal sammankomster -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Antal sammankomster</label>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="adjustSessions(-1)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">−</span>
+                        </button>
+                        <div class="flex-1 text-center">
+                            <span id="sessions-display" class="text-2xl font-bold text-primary">1</span>
+                            <span class="text-gray-500 ml-1">tillfällen</span>
+                        </div>
+                        <button onclick="adjustSessions(1)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">+</span>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <input type="range" id="sessions-slider" min="1" max="20" step="1" value="1" 
+                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                               oninput="updateSessions(this.value)">
+                    </div>
+                </div>
+
+                <!-- Önskad kursavgift -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Önskad kursavgift per deltagare (kr)</label>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="adjustCourseFee(-5)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">−</span>
+                        </button>
+                        <div class="flex-1 text-center">
+                            <span id="course-fee-display" class="text-2xl font-bold text-primary">0</span>
+                            <span class="text-gray-500 ml-1">kr</span>
+                        </div>
+                        <button onclick="adjustCourseFee(5)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">+</span>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <input type="range" id="course-fee-slider" min="0" max="3000" step="5" value="0" 
+                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                               oninput="updateCourseFee(this.value)">
+                    </div>
+                </div>
+
+                <!-- Material kostnad -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Materialkostnad (kr)</label>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="adjustMaterialCost(-100)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">−</span>
+                        </button>
+                        <div class="flex-1 text-center">
+                            <span id="material-cost-display" class="text-2xl font-bold text-primary">0</span>
+                            <span class="text-gray-500 ml-1">kr</span>
+                        </div>
+                        <button onclick="adjustMaterialCost(100)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">+</span>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <input type="range" id="material-cost-slider" min="0" max="5000" step="100" value="0" 
+                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                               oninput="updateMaterialCost(this.value)">
+                    </div>
+                </div>
+
+                <!-- Antal deltagare -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Antal deltagare</label>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="adjustParticipants(-1)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">−</span>
+                        </button>
+                        <div class="flex-1 text-center">
+                            <span id="participants-display" class="text-2xl font-bold text-primary">0</span>
+                            <span class="text-gray-500 ml-1">personer</span>
+                        </div>
+                        <button onclick="adjustParticipants(1)" class="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors">
+                            <span class="text-lg font-bold text-gray-600">+</span>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <input type="range" id="participants-slider" min="0" max="50" step="1" value="0" 
+                               class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                               oninput="updateParticipants(this.value)">
+                    </div>
+                </div>
+
+                <!-- Administrativ tilläggskostnad -->
+                <div class="mb-6">
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" id="admin-cost-checkbox" onchange="toggleAdminCost()" 
+                               class="w-5 h-5 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 focus:ring-2">
+                        <label for="admin-cost-checkbox" class="text-sm font-medium text-gray-700">
+                            Administrativ tilläggskostnad
+                        </label>
+                    </div>
+                    <div class="mt-2 ml-8">
+                        <span class="text-sm text-gray-500">Fast kostnad: 1 500 kr</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculation Summary -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 h-fit">
+                <h2 class="text-2xl font-semibold text-primary mb-6">Kalkylsammanfattning</h2>
+                
+                <div class="space-y-4 mb-6">
+                    <div class="bg-red-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-red-800 mb-3">Utgifter</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Lönekostnad (<span id="summary-sessions">1</span> × <span id="summary-hours">1</span>h × <span id="summary-wage">150</span> kr)</span>
+                                <span class="font-medium">kr <span id="base-salary">150</span></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Sociala avgifter (32%)</span>
+                                <span class="font-medium">kr <span id="social-costs">48</span></span>
+                            </div>
+                            <div class="flex justify-between items-center border-t pt-2">
+                                <span class="font-semibold text-gray-800">Total lönekostnad</span>
+                                <span class="font-bold text-red-700">kr <span id="total-salary-cost">198</span></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Materialkostnad</span>
+                                <span class="font-medium">kr <span id="material-cost-summary">0</span></span>
+                            </div>
+                            <div id="admin-cost-row" class="flex justify-between items-center hidden">
+                                <span class="text-gray-600">Administrativ tilläggskostnad</span>
+                                <span class="font-medium">kr <span id="admin-cost-summary">1,500</span></span>
+                            </div>
+                            <div class="flex justify-between items-center border-t pt-2 border-red-200">
+                                <span class="font-bold text-red-800">Totala utgifter</span>
+                                <span class="font-bold text-red-800 text-lg">kr <span id="total-expenses">198</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-green-800 mb-3">Intäkter</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Deltagarintäkter (<span id="summary-participants">0</span> × <span id="summary-fee">0</span> kr)</span>
+                                <span class="font-bold text-green-700 text-lg">kr <span id="total-revenue">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-6 border-2 border-emerald-200">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-semibold text-primary">Resultat</span>
+                            <span id="result-amount" class="text-3xl font-bold text-red-600">kr -198</span>
+                        </div>
+                        <div class="mt-2">
+                            <span id="result-status" class="text-sm font-medium text-red-700">Negativt resultat</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="generateReport()" class="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg">
+                    Generera kalkylrapport
+                </button>
+
+                <div id="report-result" class="mt-6 hidden">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                        <h3 class="font-semibold text-emerald-800 mb-2">Rapport genererad!</h3>
+                        <p class="text-emerald-700 text-sm">Kalkylrapporten är klar för granskning och godkännande.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #059669, #10b981);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #059669, #10b981);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+
+    <script>
+        let hourlyWage = 150;
+        let hours = 1;
+        let sessions = 1;
+        let courseFee = 0;
+        let materialCost = 0;
+        let participants = 0;
+        let adminCostEnabled = false;
+        const adminCostAmount = 1500;
+
+        function adjustHourlyWage(change) {
+            hourlyWage = Math.max(150, Math.min(1000, hourlyWage + change));
+            document.getElementById('hourly-wage-display').textContent = hourlyWage.toLocaleString();
+            document.getElementById('hourly-wage-slider').value = hourlyWage;
+            updateCalculation();
+        }
+
+        function updateHourlyWage(value) {
+            hourlyWage = parseInt(value);
+            document.getElementById('hourly-wage-display').textContent = hourlyWage.toLocaleString();
+            updateCalculation();
+        }
+
+        function adjustHours(change) {
+            hours = Math.max(1, Math.min(10, hours + change));
+            document.getElementById('hours-display').textContent = hours;
+            document.getElementById('hours-slider').value = hours;
+            updateCalculation();
+        }
+
+        function updateHours(value) {
+            hours = parseInt(value);
+            document.getElementById('hours-display').textContent = hours;
+            updateCalculation();
+        }
+
+        function adjustSessions(change) {
+            sessions = Math.max(1, Math.min(20, sessions + change));
+            document.getElementById('sessions-display').textContent = sessions;
+            document.getElementById('sessions-slider').value = sessions;
+            updateCalculation();
+        }
+
+        function updateSessions(value) {
+            sessions = parseInt(value);
+            document.getElementById('sessions-display').textContent = sessions;
+            updateCalculation();
+        }
+
+        function adjustCourseFee(change) {
+            courseFee = Math.max(0, Math.min(3000, courseFee + change));
+            document.getElementById('course-fee-display').textContent = courseFee.toLocaleString();
+            document.getElementById('course-fee-slider').value = courseFee;
+            updateCalculation();
+        }
+
+        function updateCourseFee(value) {
+            courseFee = parseInt(value);
+            document.getElementById('course-fee-display').textContent = courseFee.toLocaleString();
+            updateCalculation();
+        }
+
+        function adjustMaterialCost(change) {
+            materialCost = Math.max(0, Math.min(5000, materialCost + change));
+            document.getElementById('material-cost-display').textContent = materialCost.toLocaleString();
+            document.getElementById('material-cost-slider').value = materialCost;
+            updateCalculation();
+        }
+
+        function updateMaterialCost(value) {
+            materialCost = parseInt(value);
+            document.getElementById('material-cost-display').textContent = materialCost.toLocaleString();
+            updateCalculation();
+        }
+
+        function adjustParticipants(change) {
+            participants = Math.max(0, Math.min(50, participants + change));
+            document.getElementById('participants-display').textContent = participants;
+            document.getElementById('participants-slider').value = participants;
+            updateCalculation();
+        }
+
+        function updateParticipants(value) {
+            participants = parseInt(value);
+            document.getElementById('participants-display').textContent = participants;
+            updateCalculation();
+        }
+
+        function toggleAdminCost() {
+            adminCostEnabled = document.getElementById('admin-cost-checkbox').checked;
+            const adminCostRow = document.getElementById('admin-cost-row');
+            
+            if (adminCostEnabled) {
+                adminCostRow.classList.remove('hidden');
+            } else {
+                adminCostRow.classList.add('hidden');
+            }
+            
+            updateCalculation();
+        }
+
+        function updateCalculation() {
+            // Beräkningar enligt specifikation - totala arbetstimmar = timmar per sammankomst × antal sammankomster
+            const totalWorkHours = hours * sessions;
+            const baseSalary = hourlyWage * totalWorkHours;
+            const socialCosts = Math.round(baseSalary * 0.32);
+            const totalSalaryCost = baseSalary + socialCosts;
+            const adminCost = adminCostEnabled ? adminCostAmount : 0;
+            const totalExpenses = totalSalaryCost + materialCost + adminCost;
+            const totalRevenue = participants * courseFee;
+            const result = totalRevenue - totalExpenses;
+
+            // Uppdatera sammanfattning
+            document.getElementById('summary-sessions').textContent = sessions;
+            document.getElementById('summary-hours').textContent = hours;
+            document.getElementById('summary-wage').textContent = hourlyWage.toLocaleString();
+            document.getElementById('summary-participants').textContent = participants;
+            document.getElementById('summary-fee').textContent = courseFee.toLocaleString();
+
+            // Uppdatera beräkningar
+            document.getElementById('base-salary').textContent = baseSalary.toLocaleString();
+            document.getElementById('social-costs').textContent = socialCosts.toLocaleString();
+            document.getElementById('total-salary-cost').textContent = totalSalaryCost.toLocaleString();
+            document.getElementById('material-cost-summary').textContent = materialCost.toLocaleString();
+            document.getElementById('total-expenses').textContent = totalExpenses.toLocaleString();
+            document.getElementById('total-revenue').textContent = totalRevenue.toLocaleString();
+
+            // Uppdatera resultat
+            const resultElement = document.getElementById('result-amount');
+            const statusElement = document.getElementById('result-status');
+            
+            if (result >= 0) {
+                resultElement.textContent = `kr ${result.toLocaleString()}`;
+                resultElement.className = 'text-3xl font-bold text-emerald-600';
+                statusElement.textContent = 'Positivt resultat';
+                statusElement.className = 'text-sm font-medium text-emerald-700';
+            } else {
+                resultElement.textContent = `kr ${result.toLocaleString()}`;
+                resultElement.className = 'text-3xl font-bold text-red-600';
+                statusElement.textContent = 'Negativt resultat';
+                statusElement.className = 'text-sm font-medium text-red-700';
+            }
+        }
+
+        function generateReport() {
+            document.getElementById('report-result').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('report-result').classList.add('hidden');
+            }, 3000);
+        }
+
+        // Initialisera beräkningar
+        updateCalculation();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'966b2a63a7599e07',t:'MTc1Mzc3Njg5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
